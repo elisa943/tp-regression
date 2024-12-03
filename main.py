@@ -52,9 +52,11 @@ plt.show()
 def l_OLS(u, v):
     return (u - v)**2
 
-erreur_apprentissage = 1 / len_data1 * sum(l_OLS(y_train, y_pred))
+def erreur_apprentissage(y, y_pred):
+    err = 1 / len_data1 * sum(l_OLS(y, y_pred))
+    print("L'erreur d'apprentissage est de : ", err)
 
-print("L'erreur d'apprentissage est de : ", erreur_apprentissage)
+erreur_apprentissage(y_test, y_pred)
 
 data2 = np.load('data2.npy')
 len_data2 = len(data2[0, :])
@@ -98,4 +100,16 @@ erreur_apprentissage = 1 / len_data2 * sum(l_OLS(y_train, y_pred))
 
 print("L'erreur d'apprentissage est de : ", erreur_apprentissage)
 
-# Ridge
+x = np.array(data1[0, :])
+y = np.array(data1[1, :])
+
+x_data = x
+y_data = y
+q = 2
+
+def f(x, q, beta):
+    phi_i = [x[i]**i for i in range(q)]
+    sum(beta * phi_i) # TODO : vérifier 
+
+#plt.scatter(x, y, color="black")
+#plt.plot(x_test, y_pred, color="blue", linewidth=3)
