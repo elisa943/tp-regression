@@ -52,11 +52,11 @@ plt.show()
 def l_OLS(u, v):
     return (u - v)**2
 
-def erreur_apprentissage(y, y_pred):
-    err = 1 / len_data1 * sum(l_OLS(y, y_pred))
+def erreur_apprentissage(y, y_pred,len_data):
+    err = 1 / len_data * sum(l_OLS(y, y_pred))
     print("L'erreur d'apprentissage est de : ", err)
 
-erreur_apprentissage(y_test, y_pred)
+erreur_apprentissage(y_test, y_pred, len_data1)
 
 data2 = np.load('data2.npy')
 len_data2 = len(data2[0, :])
@@ -96,20 +96,28 @@ plt.plot(x_test, y_pred, color="blue", linewidth=3)
 plt.plot(x_test,a[1]*x_test+a[0], color="red")
 plt.show()
 
-erreur_apprentissage = 1 / len_data2 * sum(l_OLS(y_train, y_pred))
+erreur_apprentissage(y_test, y_pred, len_data2)
 
-print("L'erreur d'apprentissage est de : ", erreur_apprentissage)
+# Espace de redescription 
+x = np.array(data2[0, :])
+y = np.array(data2[1, :])
 
-x = np.array(data1[0, :])
-y = np.array(data1[1, :])
-
-x_data = x
+x_data = np.sort(x)
 y_data = y
-q = 2
 
-def f(x, q, beta):
-    phi_i = [x[i]**i for i in range(q)]
-    sum(beta * phi_i) # TODO : vérifier 
+# Split the data into training/testing sets
+x_train = x_data[:-len_data2//2]
+x_test = x_data[-len_data2//2:]
 
-#plt.scatter(x, y, color="black")
-#plt.plot(x_test, y_pred, color="blue", linewidth=3)
+# Split the targets into training/testing sets
+y_train = y_data[:-len_data2//2]
+y_test = y_data[-len_data2//2:]
+
+X =[[1, x[i], x[i]**2] for i in range(len(x))]
+coeff = Reg_lin(X, y)
+fx = coeff[1]*x_data + coeff[2] * x_data**2
+
+# Plot outputs
+plt.scatter(x, y, color="black")
+plt.plot(x_data, fx, 'r+')
+plt.show()
