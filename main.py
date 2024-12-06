@@ -2,16 +2,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
-# Régression Linéaire 
-def Reg_lin(X,y):
+###############################################################################
+# Imports des données
+###############################################################################
+data1 = np.load('data1.npy')
+data2 = np.load('data2.npy')
+data3 = np.load('data3.npy')
+
+len_data1 = len(data1[0, :])
+len_data2 = len(data2[0, :])
+len_data3 = len(data3[0, :])
+###############################################################################
+
+
+###############################################################################
+# OLS
+###############################################################################
+def Reg_lin(X,y): # Régression Linéaire 
     coeff=np.linalg.inv(np.dot(np.transpose(X),X))
     coeff=np.dot(coeff,np.transpose(X))
     coeff=np.dot(coeff,y)
     return coeff
-# OLS
-data1 = np.load('data1.npy')
-len_data1 = len(data1[0, :])
 
+def l_OLS(u, v):
+    return (u - v)**2
+
+def erreur_apprentissage(y, y_pred,len_data):
+    err = 1 / len_data * sum(l_OLS(y, y_pred))
+    print("L'erreur d'apprentissage est de : ", err)
+
+### data1
 
 x = np.array(data1[0, :])
 y = np.array(data1[1, :])
@@ -38,7 +58,7 @@ regr = LinearRegression()
 # Train the model using the training sets
 regr.fit(x_train, y_train)
 a=Reg_lin(X,y)
-print(a)
+
 # Make predictions using the testing set
 y_pred = regr.predict(x_test)
 
@@ -46,20 +66,13 @@ y_pred = regr.predict(x_test)
 plt.scatter(x, y, color="black")
 plt.plot(x_test, y_pred, color="blue", linewidth=3)
 plt.plot(x_test,a[1]*x_test+a[0], color="red")
-
+plt.legend(["Données", "OLS avec formule","OLS"])
+plt.title("Régression linéaire de data1")
 plt.show()
-
-def l_OLS(u, v):
-    return (u - v)**2
-
-def erreur_apprentissage(y, y_pred,len_data):
-    err = 1 / len_data * sum(l_OLS(y, y_pred))
-    print("L'erreur d'apprentissage est de : ", err)
 
 erreur_apprentissage(y_test, y_pred, len_data1)
 
-data2 = np.load('data2.npy')
-len_data2 = len(data2[0, :])
+### data2
 
 x = np.array(data2[0, :])
 y = np.array(data2[1, :])
@@ -83,7 +96,7 @@ y_test = y_data[-len_data2//2:]
 # Create linear regression object
 regr = LinearRegression()
 a=Reg_lin(X,y)
-print(a)
+
 # Train the model using the training sets
 regr.fit(x_train, y_train)
 
@@ -94,11 +107,16 @@ y_pred = regr.predict(x_test)
 plt.scatter(x, y, color="black")
 plt.plot(x_test, y_pred, color="blue", linewidth=3)
 plt.plot(x_test,a[1]*x_test+a[0], color="red")
+plt.legend(["Données", "OLS avec formule","OLS"])
+plt.title("Régression linéaire de data2")
 plt.show()
 
 erreur_apprentissage(y_test, y_pred, len_data2)
 
-# Espace de redescription 
+###############################################################################
+# Espace de redescription
+###############################################################################
+
 x = np.array(data2[0, :])
 y = np.array(data2[1, :])
 
@@ -119,5 +137,7 @@ fx = coeff[1]*x_data + coeff[2] * x_data**2
 
 # Plot outputs
 plt.scatter(x, y, color="black")
-plt.plot(x_data, fx, 'r+')
+plt.plot(x_data, fx, 'r-')
+plt.title("Espace de redescription de data2")
+plt.legend(["Données", "Espace de redescription"])
 plt.show()
