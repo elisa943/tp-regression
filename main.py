@@ -117,6 +117,7 @@ erreur_apprentissage(y_test, y_pred, len_data2)
 # Espace de redescription
 ###############################################################################
 
+### data2
 x = np.array(data2[0, :])
 y = np.array(data2[1, :])
 
@@ -138,6 +139,16 @@ fx = coeff[1]*x_data + coeff[2] * x_data**2
 # Plot outputs
 plt.scatter(x, y, color="black")
 plt.plot(x_data, fx, 'r-')
-plt.title("Espace de redescription de data2")
+plt.title("Espace de redescription pour data2")
 plt.legend(["Données", "Espace de redescription"])
+plt.show()
+
+### data 3
+
+# Affichage du nuage de points
+x = np.array(data3[0, :])
+y = np.array(data3[1, :])
+plt.scatter(x, y, color="black")
+plt.title("data3")
+plt.legend(["Données"])
 plt.show()
