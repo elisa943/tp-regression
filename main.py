@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Lasso
+
 
 ###############################################################################
 # Imports des données
@@ -30,14 +32,18 @@ def l_OLS(u, v):
 def erreur_apprentissage(y, y_pred,len_data):
     err = 1 / len_data * sum(l_OLS(y, y_pred))
     print("L'erreur d'apprentissage est de : ", err)
+    
+def X_create(q,x):
+    X=[[x[i]**j for j in range(0,q+1)] for i in range(len(x))]
+    return X
 
 ### data1
 
 x = np.array(data1[0, :])
 y = np.array(data1[1, :])
-
-X=[[1,x[i]] for i in range(len(x))]
-
+q=1
+#X=[[1,x[i]] for i in range(len(x))]
+X=X_create(q,x)
 x_data = x
 y_data = y
 
@@ -76,9 +82,9 @@ erreur_apprentissage(y_test, y_pred, len_data1)
 
 x = np.array(data2[0, :])
 y = np.array(data2[1, :])
-
-X=[[1,x[i]] for i in range(len(x))]
-
+q=1
+#X=[[1,x[i]] for i in range(len(x))]
+X=X_create(q,x)
 x_data = x
 y_data = y
 
@@ -131,8 +137,9 @@ x_test = x_data[-len_data2//2:]
 # Split the targets into training/testing sets
 y_train = y_data[:-len_data2//2]
 y_test = y_data[-len_data2//2:]
-
-X =[[1, x[i], x[i]**2] for i in range(len(x))]
+q=2
+#X =[[1, x[i], x[i]**2] for i in range(len(x))]
+X=X_create(q,x)
 coeff = Reg_lin(X, y)
 fx = coeff[1]*x_data + coeff[2] * x_data**2
 
@@ -145,10 +152,66 @@ plt.show()
 
 ### data 3
 
-# Affichage du nuage de points
+# Chargement data 3
 x = np.array(data3[0, :])
 y = np.array(data3[1, :])
+
+x_data = np.sort(x)
+y_data = y
+q=1
+# Split the data into training/testing sets
+x_train = x_data[:-len_data2//2]
+x_test = x_data[-len_data2//2:]
+
+# Split the targets into training/testing sets
+y_train = y_data[:-len_data2//2]
+y_test = y_data[-len_data2//2:]
+
+#X =[[1, x[i], x[i]**2, x[i]**3, x[i]**4, x[i]**5, x[i]**6, x[i]**7, x[i]**8, x[i]**9, x[i]**10] for i in range(len(x))]
+X=X_create(q,x)
+coeff = Reg_lin(X, y)
+fx=coeff[0]
+for i in range(1,q+1):
+    fx = fx + coeff[i]*(x_data**i)
+
+
 plt.scatter(x, y, color="black")
+plt.plot(x_data, fx, 'r-')
 plt.title("data3")
-plt.legend(["Données"])
+plt.legend(["Données", "Espace de redescription"])
+plt.show()
+
+###############################################################################
+# Methode LASSO
+###############################################################################
+
+# Chargement data 3
+x = np.array(data3[0, :])
+y = np.array(data3[1, :])
+
+x2=np.sort(x)
+
+xdata=x
+ydata=y
+q=1
+X=X_create(q,x)
+coeff = Reg_lin(X, y)
+fx=coeff[0]
+for i in range(1,q+1):
+    fx = fx + coeff[i]*(x2**i)
+    
+x_data = x_data[:, np.newaxis]
+x_train = x_data[:-len_data3//2]
+x_test = x_data[-len_data3//2:]
+y_train = y_data[:-len_data3//2]
+
+clf=Lasso()
+clf.fit(x_train,y_train)
+y_pred=clf.predict(x_test)
+
+plt.scatter(x, y, color="black")
+plt.plot(x2, fx, 'r-')
+plt.plot(x_test, y_pred, color="blue", linewidth=3)
+plt.legend(["Données", "OLS","LASSO"])
+plt.title("Régression linéaire de data3")
 plt.show()
