@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Lasso
 
+from sklearn.linear_model import RidgeClassifier
+from sklearn.linear_model import Ridge
 
 ###############################################################################
 # Imports des données
@@ -37,38 +39,43 @@ def X_create(q,x):
     X=[[x[i]**j for j in range(0,q+1)] for i in range(len(x))]
     return X
 
-### data1
+def OLS(x, y, len_data): 
+    X=X_create(1,x)
 
+    x_data = x
+    y_data = y
+
+    # Use only one feature
+    x_data = x_data[:, np.newaxis]
+
+    # Split the data into training/testing sets
+    x_train = x_data[:-len_data//2]
+    x_test = x_data[-len_data//2:]
+
+    # Split the targets into training/testing sets
+    y_train = y_data[:-len_data//2]
+    y_test = y_data[-len_data//2:]
+
+    # Create linear regression object
+    regr = LinearRegression()
+
+    # Train the model using the training sets
+    regr.fit(x_train, y_train)
+    a=Reg_lin(X,y)
+
+    # Make predictions using the testing set
+    y_pred = regr.predict(x_test)
+
+    return x_test, y_test, y_pred, a
+
+### data1
 x = np.array(data1[0, :])
 y = np.array(data1[1, :])
-q=1
-#X=[[1,x[i]] for i in range(len(x))]
-X=X_create(q,x)
-x_data = x
-y_data = y
 
-# Use only one feature
-x_data = x_data[:, np.newaxis]
-
-# Split the data into training/testing sets
-x_train = x_data[:-len_data1//2]
-x_test = x_data[-len_data1//2:]
-
-# Split the targets into training/testing sets
-y_train = y_data[:-len_data1//2]
-y_test = y_data[-len_data1//2:]
-
-# Create linear regression object
-regr = LinearRegression()
-
-# Train the model using the training sets
-regr.fit(x_train, y_train)
-a=Reg_lin(X,y)
-
-# Make predictions using the testing set
-y_pred = regr.predict(x_test)
+x_test, y_test, y_pred, a = OLS(x, y, len_data1)
 
 # Plot outputs
+plt.figure()
 plt.scatter(x, y, color="black")
 plt.plot(x_test, y_pred, color="blue", linewidth=3)
 plt.plot(x_test,a[1]*x_test+a[0], color="red")
@@ -215,3 +222,44 @@ plt.plot(x_test, y_pred, color="blue", linewidth=3)
 plt.legend(["Données", "OLS","LASSO"])
 plt.title("Régression linéaire de data3")
 plt.show()
+
+###############################################################################
+# Ridge 
+###############################################################################
+
+from sklearn.linear_model import Ridge
+
+def RIDGE(X, y, lamb):
+    # Ajouter une colonne de 1 pour le terme d'interception
+    X = np.vstack([np.ones(len(X)), X]).T
+
+    # Créer et ajuster le modèle Ridge
+    ridge = Ridge(alpha=lamb)
+    ridge.fit(X, y)
+
+    # Récupérer les coefficients
+    intercept = ridge.intercept_
+    coef = ridge.coef_
+
+    return intercept, coef
+
+x = data3[0, :]
+y = data3[1, :]
+lamb = 2.0
+
+intercept, coef = RIDGE(x, y, lamb)
+x_test, y_test, y_pred, a = OLS(x, y, len_data3)
+
+# Afficher les points de données et la ligne de régression
+plt.figure()
+plt.scatter(x, y, color='black')
+plt.plot(x, intercept + coef[1] * x, color='red', label='Ridge regression line')
+plt.plot(x_test, y_pred, color="green", label="OLS")
+plt.plot(x_test,a[1]*x_test+a[0], color="blue", label="OLS de Python")
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.title('Approches OLS et Ridge')
+plt.show()
+
+erreur_apprentissage(y_test, y_pred, len_data3)
