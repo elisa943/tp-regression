@@ -53,23 +53,24 @@ rlog, y_pred = Reg_log(X_train,y_train,X_test)
 
 # Calculer la matrice de confusion
 cm = confusion_matrix(y_test, y_pred)
-
+for i in range(0,len(cm)):
+  cm[i,:]=100*(cm[i,:]).astype(float)/(np.sum(cm[i,:])).astype(float)
 ###############################################################################
 # DISPLAY A SAMPLE
 ###############################################################################
-m=16
+m=100
 plt.figure(figsize=(10,10))
 for i in np.arange(m):
   ex_plot = plt.subplot(int(np.sqrt(m)),int(np.sqrt(m)),i+1)
-  plt.imshow(img[i,:].reshape((28,28)), cmap='gray')
+  plt.imshow(X_test[i].reshape((28,28)), cmap='gray')
   ex_plot.set_xticks(()); ex_plot.set_yticks(())
-  plt.title("Label = %i" % lb[i])
+  plt.title("Label = %i" % y_pred[i])
 
 # Afficher la matrice de confusion
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=rlog.classes_)
 disp.plot(cmap=plt.cm.Blues)
 plt.title("Matrice de confusion pour la régression logistique")
-
+print(sum(y_pred!=y_test))
 # Afficher les coefficients beta
 coef = rlog.coef_
 plt.figure(figsize=(10, 10))
