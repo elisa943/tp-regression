@@ -226,8 +226,6 @@ plt.show()
 # Ridge 
 ###############################################################################
 
-from sklearn.linear_model import Ridge
-
 def RIDGE(X, y, lamb):
     # Ajouter une colonne de 1 pour le terme d'interception
     X = np.vstack([np.ones(len(X)), X]).T
