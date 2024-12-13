@@ -5,6 +5,7 @@ from sklearn.linear_model import Lasso
 
 from sklearn.linear_model import RidgeClassifier
 from sklearn.linear_model import Ridge
+from sklearn.linear_model import LogisticRegression
 
 ###############################################################################
 # Imports des données
@@ -165,7 +166,7 @@ y = np.array(data3[1, :])
 
 x_data = np.sort(x)
 y_data = y
-q=1
+q=10
 # Split the data into training/testing sets
 x_train = x_data[:-len_data2//2]
 x_test = x_data[-len_data2//2:]
@@ -205,20 +206,18 @@ X=X_create(q,x)
 coeff = Reg_lin(X, y)
 fx=coeff[0]
 for i in range(1,q+1):
-    fx = fx + coeff[i]*(x2**i)
-    
-x_data = x_data[:, np.newaxis]
-x_train = x_data[:-len_data3//2]
-x_test = x_data[-len_data3//2:]
-y_train = y_data[:-len_data3//2]
-
-clf=Lasso()
+    fx = fx + coeff[i]*(x2**i)  
+xdata = np.vstack([np.ones(len(xdata)), xdata]).T
+x_train = xdata[:-len_data3//2]
+x_test = xdata[-len_data3//2:]
+y_train = ydata[:-len_data3//2]
+clf=Lasso(alpha=0.1)
 clf.fit(x_train,y_train)
-y_pred=clf.predict(x_test)
+print(clf.intercept_,clf.coef_)
 
 plt.scatter(x, y, color="black")
 plt.plot(x2, fx, 'r-')
-plt.plot(x_test, y_pred, color="blue", linewidth=3)
+plt.plot(x2, clf.intercept_ + x2 * clf.coef_[1], color="blue", linewidth=3)
 plt.legend(["Données", "OLS","LASSO"])
 plt.title("Régression linéaire de data3")
 plt.show()
@@ -243,8 +242,8 @@ def RIDGE(X, y, lamb):
 
     return intercept, coef
 
-x = data3[0, :]
-y = data3[1, :]
+x = np.array(data3[0, :])
+y = np.array(data3[1, :])
 lamb = 2.0
 
 intercept, coef = RIDGE(x, y, lamb)
@@ -254,8 +253,8 @@ x_test, y_test, y_pred, a = OLS(x, y, len_data3)
 plt.figure()
 plt.scatter(x, y, color='black')
 plt.plot(x, intercept + coef[1] * x, color='red', label='Ridge regression line')
-plt.plot(x_test, y_pred, color="green", label="OLS")
-plt.plot(x_test,a[1]*x_test+a[0], color="blue", label="OLS de Python")
+plt.plot(x_test, y_pred, color="green", label="OLS de Python")
+plt.plot(x_data,a[1]*x_data+a[0], color="blue", label="OLS")
 plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
@@ -263,3 +262,4 @@ plt.title('Approches OLS et Ridge')
 plt.show()
 
 erreur_apprentissage(y_test, y_pred, len_data3)
+
