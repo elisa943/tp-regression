@@ -70,4 +70,16 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=rlog.classes_)
 disp.plot(cmap=plt.cm.Blues)
 plt.title("Matrice de confusion pour la régression logistique")
 
+# Afficher les coefficients beta
+coef = rlog.coef_
+plt.figure(figsize=(10, 10))
+for i in range(10):
+    plt.subplot(5, 2, i + 1)
+    plt.imshow(coef[i].reshape(28, 28), cmap='RdBu')
+    plt.title(f'Classe {i}')
+    plt.colorbar()
+    plt.axis('off')
+
+plt.suptitle("Coefficients βˆ pour chaque classe")
+
 plt.show()
