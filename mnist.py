@@ -37,4 +37,5 @@ for i in np.arange(m):
   ex_plot = plt.subplot(int(np.sqrt(m)),int(np.sqrt(m)),i+1)
   plt.imshow(img[i,:].reshape((28,28)), cmap='gray')
   ex_plot.set_xticks(()); ex_plot.set_yticks(())
-  #lt.title("Label = %i" % lb[i])
+  plt.title("Label = %i" % lb[i])
+plt.show()

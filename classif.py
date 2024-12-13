@@ -64,8 +64,13 @@ print(np.shape(x0))
 ################################################################################
 # Trouver les hyperplans 
 ################################################################################
-rlog = LogisticRegression()
-rlog.fit(X,y)
+def Reg_log(X,y,X_test):
+  rlog = LogisticRegression()
+  rlog.fit(X,y)
+  Y_pred=rlog.predict(X_test)
+  return rlog,Y_pred
+
+rlog, y_pred = Reg_log(X,y,X[1:450,:])
 coeff = rlog.coef_[0]
 X_pred=np.linspace(-10,6,20)
 Y_pred=-(coeff[1]/coeff[2])*X_pred-(coeff[0]/coeff[2])
