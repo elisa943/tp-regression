@@ -38,7 +38,7 @@ n_test = y_test.size
 ###############################################################################
 
 def Reg_log(X,y,X_test):
-  rlog = LogisticRegression()
+  rlog = LogisticRegression(max_iter=1000)
   rlog.fit(X,y)
   Y_pred=rlog.predict(X_test)
   return rlog,Y_pred
