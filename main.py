@@ -5,7 +5,7 @@ from sklearn.linear_model import Lasso
 
 from sklearn.linear_model import RidgeClassifier
 from sklearn.linear_model import Ridge
-from sklearn.linear_model import LogisticRegression
+
 
 ###############################################################################
 # Imports des données
@@ -262,4 +262,7 @@ plt.title('Approches OLS et Ridge')
 plt.show()
 
 erreur_apprentissage(y_test, y_pred, len_data3)
+
+
+
 

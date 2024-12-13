@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.linalg as la
 import numpy.random as rnd
+from sklearn.linear_model import LogisticRegression
 ###############################################################################
 
 ################################################################################
@@ -54,6 +55,7 @@ X = np.ones((n,p+1))
 for i in np.arange(n):
      X[0:n0+nout,1:p+1] = x0.T
      X[n0+nout:n,1:p+1] = x1.T
+print(np.shape(x0))
 ################################################################################
 
 ################################################################################
@@ -62,11 +64,18 @@ for i in np.arange(n):
 # Trouver les hyperplans 
 ################################################################################
 
+rlog = LogisticRegression()
+rlog.fit(X,y)
+coeff = rlog.coef_[0]
+X_pred=np.linspace(-10,6,20)
+Y_pred=-(coeff[1]/coeff[2])*X_pred-(coeff[0]/coeff[2])
 ################################################################################
 # PLOTS
 ################################################################################
 fig,ax = plt.subplots()
+ax.plot(X_pred,Y_pred)
 ax.plot(x0[0,:],x0[1,:],'xb',label='Class 0')
 ax.plot(x1[0,:],x1[1,:],'xr',label="Class 1")
 ax.legend(loc = "upper left")
+plt.ylim(np.min(x0[1,:])-0.5,np.max(x1[1,:])+0.5)
 plt.show()
