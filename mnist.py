@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
 ###############################################################################
 # LOAD MNIST
 ###############################################################################
@@ -28,6 +31,21 @@ k = len(np.unique(lb))
 (n,p) = img.shape
 n_train = y_train.size
 n_test = y_test.size 
+
+###############################################################################
+# TRAINING AND TEST SETS
+###############################################################################
+
+# Normaliser les données
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Calculer la matrice de confusion
+cm = confusion_matrix(y_test, y_pred)
+
+
+
 ###############################################################################
 # DISPLAY A SAMPLE
 ###############################################################################
@@ -38,3 +56,9 @@ for i in np.arange(m):
   plt.imshow(img[i,:].reshape((28,28)), cmap='gray')
   ex_plot.set_xticks(()); ex_plot.set_yticks(())
   #lt.title("Label = %i" % lb[i])
+
+# Afficher la matrice de confusion
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=log_reg.classes_)
+disp.plot(cmap=plt.cm.Blues)
+plt.title("Matrice de confusion pour la régression logistique")
+plt.show()
