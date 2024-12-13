@@ -58,7 +58,7 @@ for i in range(0,len(cm)):
 ###############################################################################
 # DISPLAY A SAMPLE
 ###############################################################################
-m=100
+m=25
 plt.figure(figsize=(10,10))
 for i in np.arange(m):
   ex_plot = plt.subplot(int(np.sqrt(m)),int(np.sqrt(m)),i+1)
@@ -70,7 +70,7 @@ for i in np.arange(m):
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=rlog.classes_)
 disp.plot(cmap=plt.cm.Blues)
 plt.title("Matrice de confusion pour la régression logistique")
-print(sum(y_pred!=y_test))
+print(100*sum(y_pred!=y_test)/len(y_pred))
 # Afficher les coefficients beta
 coef = rlog.coef_
 plt.figure(figsize=(10, 10))
